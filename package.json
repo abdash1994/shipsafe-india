@@ -2,11 +2,15 @@
   "name": "shipsafe",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint src --ext .ts,.tsx"
   },
   "dependencies": {
     "next": "16.2.7",
