@@ -1,195 +1,141 @@
-# 🛡️ ShipSafe India
+# ShipSafe India
 
-> **The only pre-launch scanner built for Indian vibe coders.**
-> Paste your URL. Know if your app is India-ready in 60 seconds.
+> Paste your URL. Know if your app is India-ready in 60 seconds. The only pre-launch scanner that checks DPDP, RBI, and CERT-In — not just global security.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
-
-**Live:** [shipsafe-india.vercel.app](https://shipsafe-india.vercel.app) · **Pitch Deck:** [PITCH.md](./PITCH.md)
+**Live demo:** [shipsafe-india.vercel.app](https://shipsafe-india.vercel.app) · **Pitch deck:** [PITCH.md](./PITCH.md)
 
 ---
 
-## The Problem
+## What it does
 
-91.5% of AI-built apps ship with at least one critical vulnerability *(Escape.tech, Q1 2026)*. Indian founders using Cursor, Bolt, Lovable, or Replit ship fast — but miss two layers of problems:
-
-1. **Universal gaps** — broken auth, no analytics, exposed API keys, missing SEO basics
-2. **India-specific gaps** — DPDP consent, Grievance Officer, RBI data localization, CERT-In reporting — things no global scanner checks
-
-**ShipSafe India automates both layers into a 60-second URL scan.**
-
----
-
-## What It Checks (39 checks, 5 categories)
-
-### 🇮🇳 India Compliance — 11 checks *(unique — no other scanner covers these)*
-
-| Check | Regulation | Risk if Missed |
-|-------|-----------|----------------|
-| DPDP consent banner present | DPDP Act 2023, §5–6 | Up to ₹250 crore fine |
-| Privacy notice in plain language | DPDP Act 2023, §5 | Non-compliant data collection |
-| Grievance Officer name + contact published | DPDP + RBI PA-O 2025 | Payment processor won't activate |
-| Hindi language support | DPDP Act 2023, §5 | Consent invalid for non-English users |
-| Razorpay/payment key not in client HTML | RBI PA-O 2025, PCI DSS | Payment account suspension |
-| Refund policy page exists | Consumer Protection Rules 2020 | Razorpay/Cashfree onboarding blocked |
-| Physical address/contact published | E-Commerce Rules 2020 | Consumer violation |
-| Indian payment gateway detected | — | UPI/Razorpay expected by Indian users |
-| Cyber incident response awareness | CERT-In Directions 2022 | ₹70,000+ penalty per incident |
-| Data breach notification plan | DPDP Act 2023, §8 | Data Protection Board penalty |
-| RBI data localization awareness | RBI Circular 2018 | RBI enforcement action |
-
-### 🔒 Security — 8 checks
-HTTPS enforced · HSTS · Content Security Policy · X-Frame-Options · X-Content-Type-Options · Referrer Policy · Custom domain check · No exposed API keys in HTML
-
-### ⚖️ Legal & Compliance — 6 checks
-Privacy policy · Terms of service · Cookie consent · Contact email · Form accessibility (WCAG labels) · Security contact
-
-### 🔍 SEO & Discoverability — 9 checks
-robots.txt · sitemap.xml · Page title · Meta description · Open Graph tags · H1 tag · Canonical URL · Viewport meta · Favicon
-
-### 📊 Monitoring & Analytics — 5 checks
-Web analytics · Error tracking · Uptime monitoring · Transactional email (SPF/DKIM) · Database backups
+- Runs **39 automated checks** across security, India compliance, SEO, legal, and monitoring
+- Catches **India-specific gaps** no other scanner covers — DPDP consent, Grievance Officer, Razorpay key exposure, RBI data localization, CERT-In reporting
+- Returns a **grade (A–F) and score (0–100)** with per-check explanations and fix guides
+- Flags which **regulation applies** (DPDP §5, RBI PA-O 2025, CERT-In 2022) so you know the real-world consequence
+- **Free, no signup** — paste a URL and get results in ~15 seconds
 
 ---
 
-## How It Works
+## Features
+
+| | |
+|---|---|
+| 🇮🇳 **India Compliance** | DPDP consent, Grievance Officer, Razorpay key check, RBI data localization, CERT-In, Hindi language, refund policy |
+| 🔒 **Security** | HTTPS, HSTS, CSP, X-Frame-Options, Referrer-Policy, secret key detection, custom domain check |
+| ⚖️ **Legal** | Privacy policy, terms of service, cookie consent, form accessibility, security contact |
+| 🔍 **SEO** | robots.txt, sitemap.xml, Open Graph, H1, canonical URLs, meta description, viewport, favicon |
+| 📊 **Monitoring** | Analytics, error tracking (Sentry), uptime monitoring, transactional email, database backups |
+
+---
+
+## India compliance — why it matters
+
+Every other scanner (VibeDoctor, CheckVibe, Vibe App Scanner) covers global security. None check for India-specific requirements:
+
+| Check | Regulation | Penalty if missed |
+|-------|-----------|-------------------|
+| DPDP consent banner | DPDP Act 2023, §5–6 | Up to ₹250 crore |
+| Grievance Officer published | DPDP + RBI PA-O 2025 | Payment processor blocks activation |
+| Razorpay key in client HTML | PCI DSS + RBI PA-O 2025 | Payment account suspended |
+| Refund policy page | Consumer Protection Rules 2020 | Cashfree/Razorpay onboarding blocked |
+| Data on India servers | RBI Circular 2018 | RBI enforcement |
+| CERT-In incident plan | CERT-In Directions 2022 | ₹70,000+ per incident |
+
+---
+
+## Tech stack
 
 ```
-1. Enter any URL → https://yourapp.in
-2. Scanner fetches the page + robots.txt + sitemap.xml
-3. Runs 39 checks across 5 categories
-4. Returns grade (A–F), score (0–100), and per-check findings
-5. Each finding shows: what's wrong, why it matters, how to fix it, which regulation applies
-```
-
-**Example output for a typical vibe-coded app:**
-
-```
-Grade: D  |  Score: 42/100
-
-🔴 3 Critical  |  🟠 8 High  |  🟡 11 Medium  |  ✅ 8 Passed
-
-🇮🇳 INDIA COMPLIANCE
-  ✗ DPDP Consent Banner missing              [CRITICAL] DPDP Act §5
-  ✗ Grievance Officer not published          [HIGH]     DPDP + RBI
-  ✗ No Refund Policy found                   [HIGH]     Consumer Protection Rules
-  ⚠ Hindi language support not detected     [MEDIUM]   DPDP Act §5
-  ✓ HTTPS enforced
-
-🔒 SECURITY
-  ✗ Content Security Policy header missing  [HIGH]
-  ✓ No API keys exposed in HTML
-  ...
+Frontend      Next.js 16 (App Router) + TypeScript + Tailwind CSS v4
+Scanner       Custom HTTP + HTML analysis — no external APIs, no API keys needed
+Security      SSRF protection, rate limiting (10 req/min), full HTTP security headers
+Hosting       Vercel
 ```
 
 ---
 
-## Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Framework | Next.js 16 (App Router) |
-| Language | TypeScript 5 |
-| Styling | Tailwind CSS v4 |
-| Runtime | Node.js 20 |
-| Deployment | Vercel (Mumbai-region) |
-| Scanner | Custom HTTP + HTML analysis (no external APIs) |
-
----
-
-## Running Locally
+## Quick start
 
 ```bash
 git clone https://github.com/abdash1994/shipsafe-india.git
 cd shipsafe-india
 npm install
-npm run dev
+npm run dev        # dashboard at http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Then POST to the API:
 
-> **Note:** If your local `~/.npmrc` points to a private registry (e.g. Sonatype Nexus),
-> the project `.npmrc` overrides it to use `registry.npmjs.org`.
+```bash
+curl -X POST http://localhost:3000/api/scan \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://yourapp.in"}'
+```
+
+---
+
+## Repository structure
+
+```
+shipsafe-india/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx              Landing page + URL scanner input
+│   │   ├── results/page.tsx      Results display with grade + findings
+│   │   └── api/scan/route.ts     Scanner API (POST /api/scan)
+│   └── lib/
+│       ├── scanner.ts            Orchestrator — runs all checks, computes score
+│       ├── fetcher.ts            HTTP fetch + resource helpers
+│       └── checks/
+│           ├── india.ts          11 India-specific checks (DPDP, RBI, CERT-In)
+│           ├── security.ts       8 security checks
+│           ├── legal.ts          6 legal/compliance checks
+│           ├── seo.ts            9 SEO checks
+│           └── analytics.ts      5 monitoring checks
+├── vercel.json                   Vercel build config
+├── next.config.ts                Security headers + HTTP→HTTPS redirect
+├── .npmrc                        Pins to public npm registry
+├── PITCH.md                      Investor pitch deck (12 slides)
+└── .env.example                  Environment variable reference
+```
 
 ---
 
 ## API
 
-### `POST /api/scan`
+`POST /api/scan` — rate limited to 10 requests/IP/minute
 
-**Request:**
 ```json
+// Request
 { "url": "https://yourapp.in" }
-```
 
-**Response:**
-```json
+// Response
 {
-  "url": "https://yourapp.in",
-  "scannedAt": "2026-06-08T...",
   "score": 42,
   "grade": "D",
-  "categories": [...],
-  "summary": {
-    "critical": 3,
-    "high": 8,
-    "medium": 11,
-    "passed": 8,
-    "total": 39
-  },
-  "scanDurationMs": 350
+  "summary": { "critical": 3, "high": 8, "medium": 11, "passed": 8, "total": 39 },
+  "categories": [...]
 }
 ```
 
-Rate limited to **10 requests per IP per minute**.
-
----
-
-## Security Design
-
-- **SSRF protection** — private/internal IP addresses blocked from scanning
-- **Rate limiting** — in-memory, 10 req/min per IP with standard `X-RateLimit-*` headers
-- **Security headers** — HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
-- **No secrets required** — scanner uses only public HTTP, no API keys needed to run
-- **HTTP → HTTPS redirect** — enforced in production via `x-forwarded-proto` header
-
----
-
-## Project Background
-
-ShipSafe India was built after researching a viral Instagram reel by `@saban.talks` that got **15,500 likes and 8,000 comments** — all asking for a pre-launch checklist for vibe-coded apps. The creator's solution was a PDF delivered via DM. This is the automated version, built India-first because no existing scanner (VibeDoctor, CheckVibe, Vibe App Scanner) checks for DPDP, RBI, or CERT-In compliance.
-
-**Origin:** Built in a single session using Cursor by [Aditya Bikram Dash](https://github.com/abdash1994), Senior PM at Sonatype — where compliance scanning is the day job.
-
-📋 **[Read the full investor pitch deck →](./PITCH.md)**
-
----
-
-## Regulations Covered
-
-| Regulation | Scope |
-|-----------|-------|
-| **DPDP Act 2023** | India's privacy law — consent, notices, rights, breach notification |
-| **RBI PA-O Directions 2025** | Payment aggregator compliance, data localization, merchant requirements |
-| **CERT-In Directions 2022** | Cyber incident reporting (6-hour clock) |
-| **Consumer Protection (E-Commerce) Rules 2020** | Contact info, refund policy, address |
-| **WCAG 2.2 AA** | Web accessibility |
+Each check in `categories` includes `title`, `status` (pass/fail/warn), `severity`, `detail`, `fixGuide`, and `regulation`.
 
 ---
 
 ## Roadmap
 
-- [ ] Fix-it widget — DPDP consent banner (one-click embed, ₹999/month)
-- [ ] Continuous monitoring — rescan on deploy, alert on regression
+- [ ] Fix-it widget — DPDP consent banner auto-embed (₹999/month)
+- [ ] Continuous monitoring — rescan on deploy, alert on regression  
+- [ ] PDF compliance report — downloadable audit proof
 - [ ] CI/CD integration — GitHub Actions, Vercel deploy hooks
-- [ ] PDF compliance report — downloadable audit proof for investors
-- [ ] Mobile app checks — Play Store, App Store-specific requirements
-- [ ] API access for agencies — multi-site scanning
+- [ ] Mobile app checks — Play Store, App Store requirements
 
 ---
 
-## License
+## Author
 
-MIT — free to use, fork, and build on.
+**Aditya Bikram Dash** — Senior PM at Sonatype (compliance/security SaaS)  
+[github.com/abdash1994](https://github.com/abdash1994) · [linkedin.com/in/adityabikramdash](https://linkedin.com/in/adityabikramdash)
+
+---
+
+*Built in one session with Cursor. Scanning URLs now — deploy your own or use the live demo.*
