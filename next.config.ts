@@ -54,14 +54,16 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  // Redirect HTTP → HTTPS in production
+  // Redirect HTTP → HTTPS in production (Vercel handles this natively,
+  // but this catches any edge case. Uses relative redirect so it works
+  // on any domain — vercel.app or a custom domain later)
   async redirects() {
     if (process.env.NODE_ENV !== "production") return [];
     return [
       {
         source: "/:path*",
         has: [{ type: "header", key: "x-forwarded-proto", value: "http" }],
-        destination: "https://shipsafe.in/:path*",
+        destination: "https://:host/:path*",
         permanent: true,
       },
     ];
