@@ -4,9 +4,11 @@
 
 Paste your URL. Get a full compliance + security report in 60 seconds — covering DPDP, RBI, CERT-In, and all the things Indian apps must get right before going live.
 
+> 📋 **[Read the Pitch Deck →](./PITCH.md)**
+
 ## Live Demo
 
-> Coming soon: [shipsafe-india.vercel.app](https://shipsafe-india.vercel.app)
+> [shipsafe-india.vercel.app](https://shipsafe-india.vercel.app)
 
 ## What It Checks (39 checks across 5 categories)
 
