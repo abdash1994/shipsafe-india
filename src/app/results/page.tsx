@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ScanResult, CheckResult, Category } from "@/lib/types";
 import { decodeResult } from "@/lib/share";
+import { SiteNav } from "@/components/site-nav";
+import { SiteFooter } from "@/components/site-footer";
 
 export const dynamic = "force-dynamic";
 
@@ -13,21 +15,23 @@ function ResultsContent() {
   const [copied, setCopied] = useState(false);
   const [manualChecked, setManualChecked] = useState<Record<string, boolean>>({});
   const router = useRouter();
-  const searchParams = useSearchParams();
 
+  // Load after hydration to avoid server/client mismatch
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => {
-    // First try ?r= URL param (shareable link)
-    const encoded = searchParams.get("r");
+    const params = new URLSearchParams(window.location.search);
+    const encoded = params.get("r");
     if (encoded) {
       const decoded = decodeResult(encoded);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (decoded) { setResult(decoded); return; }
     }
-    // Fall back to sessionStorage (fresh scan)
     const stored = sessionStorage.getItem("scanResult");
-    if (!stored) { router.push("/"); return; }
-    try { setResult(JSON.parse(stored)); }
-    catch { router.push("/"); }
-  }, [router, searchParams]);
+    if (!stored) { router.push("/scan"); return; }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    try { setResult(JSON.parse(stored) as ScanResult); }
+    catch { router.push("/scan"); }
+  }, [router]);
 
   const handleShare = () => {
     if (!result) return;
@@ -80,20 +84,19 @@ function ResultsContent() {
     "transactional-email", "db-backups", "gh-env-example",
   ]);
   const manualChecks = warnChecks.filter(c => unverifiableIds.has(c.id));
-  const autoWarnChecks = warnChecks.filter(c => !unverifiableIds.has(c.id));
   const manualDoneCount = manualChecks.filter(c => manualChecked[c.id]).length;
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)" }}>
       <div className="tricolor-bar" style={{ height: 3 }} />
 
-      {/* Nav */}
-      <nav style={{ padding: "16px 40px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <button onClick={() => router.push("/")} style={{ display: "flex", alignItems: "center", gap: 8, background: "none", border: "none", cursor: "pointer", color: "var(--text)" }}>
-          <span style={{ fontFamily: "var(--font-display, Syne, sans-serif)", fontWeight: 800, fontSize: 16 }}>
-            🛡️ ShipSafe<span style={{ color: "var(--saffron)" }}> India</span>
-          </span>
-        </button>
+      <SiteNav active="results" />
+
+      {/* Results actions */}
+      <nav style={{ padding: "16px 40px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+        <div style={{ fontSize: 12, color: "var(--text-dim)", fontFamily: "var(--font-mono, monospace)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          Ship readiness report
+        </div>
         <div style={{ display: "flex", gap: 10 }}>
           <button
             onClick={handleShare}
@@ -102,7 +105,7 @@ function ResultsContent() {
             {copied ? "✓ Link copied!" : "🔗 Share results"}
           </button>
           <button
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/scan")}
             style={{ background: "var(--surface)", border: "1px solid var(--border)", color: "var(--text-muted)", padding: "8px 16px", borderRadius: 8, cursor: "pointer", fontSize: 13 }}
           >
             ← Scan another URL
@@ -206,7 +209,7 @@ function ResultsContent() {
                   🔧 Manual Checks Required
                 </h2>
                 <p style={{ fontSize: 12, color: "var(--text-muted)", margin: "3px 0 0" }}>
-                  These can't be verified from a URL scan — check each one in your setup and tick it off
+                  These can&apos;t be verified from a URL scan — check each one in your setup and tick it off
                 </p>
               </div>
               <span style={{ fontSize: 13, color: manualDoneCount === manualChecks.length ? "var(--green-pass)" : "var(--text-dim)" }}>
@@ -261,6 +264,8 @@ function ResultsContent() {
           />
         ))}
       </div>
+
+      <SiteFooter />
     </main>
   );
 }
