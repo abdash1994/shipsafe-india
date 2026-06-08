@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ScanResult, CheckResult, Category } from "@/lib/types";
-import { decodeResult, buildShareUrl } from "@/lib/share";
+import { decodeResult } from "@/lib/share";
 
 export const dynamic = "force-dynamic";
 
@@ -31,8 +31,10 @@ function ResultsContent() {
 
   const handleShare = () => {
     if (!result) return;
-    const url = buildShareUrl(result);
-    navigator.clipboard.writeText(url).then(() => {
+    // Use ?url= param — triggers a fresh scan on open (60 chars vs 36KB full encoding)
+    // Works perfectly on WhatsApp, iMessage, Telegram, email
+    const shareUrl = `https://shipsafe-india.vercel.app?url=${encodeURIComponent(result.url)}`;
+    navigator.clipboard.writeText(shareUrl).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     });

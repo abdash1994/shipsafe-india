@@ -255,7 +255,18 @@ function hasDPDPConsent(html: string): boolean {
     html.includes("consent-banner") ||
     html.includes("consent_banner") ||
     html.includes("gdpr") ||
-    html.includes("ccpa")
+    html.includes("ccpa") ||
+    // CMP script src URLs in static HTML (loaded by browser, present even before JS executes)
+    html.includes("cdn.cookielaw.org") ||
+    html.includes("consent.cookiebot.com") ||
+    html.includes("notice.cookiebot.com") ||
+    html.includes("cdn-cookieyes.com") ||
+    html.includes("cdn.termly.io") ||
+    html.includes("app.usercentrics.eu") ||
+    html.includes("cmp.quantcast.com") ||
+    html.includes("privacy-center.org") ||
+    html.includes("cookiepro.com") ||
+    html.includes("sdk.privacy-center.org")
   );
 }
 
