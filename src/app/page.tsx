@@ -28,9 +28,14 @@ export default function HomePage() {
         throw new Error(data.error || "Scan failed");
       }
 
-      const result = await res.json();
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Scan failed");
+      }
+
       // Store result and navigate to results page
-      sessionStorage.setItem("scanResult", JSON.stringify(result));
+      sessionStorage.setItem("scanResult", JSON.stringify(data));
       router.push("/results");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Scan failed. Try again.");

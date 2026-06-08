@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ScanResult, CheckResult, Category } from "@/lib/types";
 
+export const dynamic = "force-dynamic";
+
 export default function ResultsPage() {
   const [result, setResult] = useState<ScanResult | null>(null);
   const [expandedCheck, setExpandedCheck] = useState<string | null>(null);

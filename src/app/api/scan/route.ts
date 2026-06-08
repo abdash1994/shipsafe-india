@@ -133,8 +133,20 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("Scan error:", error);
-    const message =
-      error instanceof Error ? error.message : "Scan failed. Please try again.";
+    const raw = error instanceof Error ? error.message : "";
+
+    // Map common fetch errors to friendly messages
+    let message = "Scan failed. Please try again.";
+    if (raw.includes("fetch failed") || raw.includes("ENOTFOUND") || raw.includes("getaddrinfo")) {
+      message = "Could not reach that URL. Check the address and try again.";
+    } else if (raw.includes("ECONNREFUSED")) {
+      message = "Connection refused. The server may be down or blocking scanners.";
+    } else if (raw.includes("timeout") || raw.includes("AbortError")) {
+      message = "Scan timed out. The site took too long to respond (>10s).";
+    } else if (raw.includes("certificate") || raw.includes("SSL")) {
+      message = "SSL certificate error. The site may have an invalid HTTPS certificate.";
+    }
+
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
