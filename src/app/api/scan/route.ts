@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { scanUrl } from "@/lib/scanner";
+import { parseGithubUrl, scanGithubRepo } from "@/lib/github-scanner";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -126,7 +127,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const result = await scanUrl(normalizedUrl);
+    // Auto-detect GitHub repo URLs and route to source scanner
+    const github = parseGithubUrl(normalizedUrl);
+    const result = github
+      ? await scanGithubRepo(github.owner, github.repo)
+      : await scanUrl(normalizedUrl);
 
     return NextResponse.json(result, {
       headers: getRateLimitHeaders(remaining, resetAt),

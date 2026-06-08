@@ -20,7 +20,8 @@ export type CategoryId =
   | "seo"
   | "analytics"
   | "infrastructure"
-  | "payments";
+  | "payments"
+  | "github";
 
 export interface Category {
   id: CategoryId;
