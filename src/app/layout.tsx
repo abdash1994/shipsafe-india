@@ -21,12 +21,14 @@ const syne = Syne({
 });
 
 export const metadata: Metadata = {
-  title: "ShipSafe India — Pre-Launch Scanner for Indian Apps",
+  title: "ShipSafe India — Start Smart. Ship Safe.",
   description:
-    "Paste your URL. Know if your app is actually ready to ship in India. DPDP, RBI, CERT-In compliance + security + SEO — checked in 60 seconds.",
+    "The India-first founder workflow for startup launch readiness: know what to set up before launch, then scan your app for DPDP, RBI, CERT-In, legal, security, SEO, and monitoring gaps.",
   keywords: [
     "DPDP compliance",
     "India app launch",
+    "startup checklist India",
+    "launch readiness India",
     "vibe coding India",
     "pre-launch checklist India",
     "RBI compliance app",
