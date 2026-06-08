@@ -97,8 +97,24 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "URL is required" }, { status: 400 });
     }
 
-    // Normalize URL
+    // Normalize URL — only if not already prefixed with a scheme
     let normalizedUrl = url.trim();
+
+    // Block dangerous schemes BEFORE normalization
+    const rawLower = normalizedUrl.toLowerCase();
+    if (
+      rawLower.startsWith("file://") ||
+      rawLower.startsWith("ftp://") ||
+      rawLower.startsWith("javascript:") ||
+      rawLower.startsWith("data:") ||
+      rawLower.startsWith("vbscript:")
+    ) {
+      return NextResponse.json(
+        { error: "Only http and https URLs are supported." },
+        { status: 400 }
+      );
+    }
+
     if (!normalizedUrl.startsWith("http")) {
       normalizedUrl = `https://${normalizedUrl}`;
     }
@@ -118,7 +134,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Only allow http/https schemes
+    // Enforce http/https only (after normalization)
     const scheme = new URL(normalizedUrl).protocol;
     if (scheme !== "http:" && scheme !== "https:") {
       return NextResponse.json(

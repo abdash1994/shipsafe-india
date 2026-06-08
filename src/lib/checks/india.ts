@@ -337,30 +337,51 @@ function hasCERTInMention(html: string): boolean {
 }
 
 function hasIndianPaymentGateway(html: string): boolean {
+  // Require integration signals — script tags, API initializers, or checkout elements
+  // Not just text mentions (to avoid false positives from articles/blog posts)
   return (
-    html.includes("razorpay") ||
-    html.includes("cashfree") ||
-    html.includes("phonepe") ||
-    html.includes("paytm") ||
-    html.includes("ccavenue") ||
-    html.includes("instamojo") ||
-    html.includes("billdesk") ||
-    html.includes("payumoney") ||
-    html.includes("payu")
+    // Script src patterns
+    /src=["'][^"']*razorpay[^"']*["']/.test(html) ||
+    /src=["'][^"']*cashfree[^"']*["']/.test(html) ||
+    /src=["'][^"']*phonepe[^"']*["']/.test(html) ||
+    /src=["'][^"']*paytm[^"']*["']/.test(html) ||
+    /src=["'][^"']*ccavenue[^"']*["']/.test(html) ||
+    /src=["'][^"']*instamojo[^"']*["']/.test(html) ||
+    // JS initialization patterns
+    html.includes("Razorpay(") ||
+    html.includes("new Razorpay") ||
+    html.includes("razorpay.open()") ||
+    html.includes("rzp.open()") ||
+    html.includes("cashfree.checkout") ||
+    html.includes("cfCheckout") ||
+    // Checkout form patterns
+    html.includes("data-key=\"rzp_") ||
+    /data-key=["']rzp_/.test(html)
   );
 }
 
 function hasAnyPaymentGateway(html: string): boolean {
+  if (hasIndianPaymentGateway(html)) return true;
+
+  // Global payment gateways — require script integration, not text mentions
   return (
-    hasIndianPaymentGateway(html) ||
-    html.includes("stripe") ||
-    html.includes("paypal") ||
-    html.includes("braintree") ||
-    html.includes("square") ||
-    html.includes("checkout.com") ||
-    html.includes("adyen") ||
-    html.includes("paddle") ||
-    html.includes("lemon squeezy") ||
-    html.includes("gumroad")
+    // Stripe
+    html.includes("js.stripe.com") ||
+    html.includes("stripe.confirmCardPayment") ||
+    html.includes("loadStripe(") ||
+    html.includes("Stripe(") ||
+    /src=["'][^"']*stripe\.com[^"']*["']/.test(html) ||
+    // PayPal
+    html.includes("paypal.com/sdk") ||
+    html.includes("paypal.Buttons") ||
+    html.includes("paypalobjects.com") ||
+    /src=["'][^"']*paypal[^"']*["']/.test(html) ||
+    // Others
+    html.includes("braintree.client.create") ||
+    html.includes("square.payments") ||
+    html.includes("paddle.Checkout") ||
+    html.includes("LemonSqueezy") ||
+    html.includes("adyen.checkout") ||
+    html.includes("gumroad-overlay-checkout")
   );
 }
